@@ -7,4 +7,4 @@ awk '
         ss = int(ss/3) - 2;
      }
    }
-   END { print s }'
+   END { print s }' < day01.input

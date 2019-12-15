@@ -1,3 +1,7 @@
+NOUN=$1
+VERB=$2
+if [ -z "$NOUN" ]; then NOUN=12; fi
+if [ -z "$VERB" ]; then VERB=2; fi
 awk '
     BEGIN {
         FS=",";
@@ -27,4 +31,4 @@ awk '
         }
         print mem[0];
     }
-' NOUN=$1 VERB=$2 < day02.input
+' NOUN=$NOUN VERB=$VERB < day02.input

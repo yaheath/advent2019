@@ -36,4 +36,4 @@ awk '
         }
         print closest;
     }
-'
+' < day03.input

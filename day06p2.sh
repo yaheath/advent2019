@@ -19,4 +19,4 @@ END {
         obj = map[obj];
     }
     print (c + santa[obj]);
-}'
+}' < day06.input

@@ -3,7 +3,7 @@
 let width=25
 let height=6
 let "lyrsize = width * height"
-awk "{ gsub(/.{$lyrsize}/, \"&\\n\"); print;}" | awk -v height=$height -v width=$width '
+awk "{ gsub(/.{$lyrsize}/, \"&\\n\"); print;}" <day08.input | awk -v height=$height -v width=$width '
 BEGIN {
     FS = "";
 }

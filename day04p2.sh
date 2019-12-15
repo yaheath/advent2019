@@ -1,6 +1,12 @@
 #!/bin/sh
 
-awk 'END {
+awk '
+BEGIN { FS="-"; }
+{
+    FROM = $1;
+    TO = $2;
+}
+END {
     count=0;
     for (v = FROM+0; v <= TO+0; v++) {
         split(v+"", digits, "");
@@ -22,4 +28,4 @@ awk 'END {
         if (gotdup && i == 7) count++;
     }
     print count;
-}' FROM=$1 TO=$2 </dev/null
+}' < day04.input

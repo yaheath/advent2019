@@ -3,7 +3,7 @@
 let width=25
 let height=6
 let "lyrsize = width * height"
-awk "{ gsub(/.{$lyrsize}/, \"&\\n\"); print;}" | awk '
+awk "{ gsub(/.{$lyrsize}/, \"&\\n\"); print;}" <day08.input | awk '
 BEGIN {
     FS = "";
     fewestzeros = -1;
@@ -18,9 +18,7 @@ BEGIN {
         if ($i == "1") nones++;
         if ($i == "2") ntwos++;
     }
-    print nzeros " " nones " " ntwos
     if (fewestzeros == -1 || nzeros < fewestzeros) {
-        print "got smallest"
         fewestzeros = nzeros;
         product = nones * ntwos;
     }

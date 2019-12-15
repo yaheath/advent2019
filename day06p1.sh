@@ -12,4 +12,4 @@ END {
         }
     }
     print n;
-}'
+}' < day06.input
