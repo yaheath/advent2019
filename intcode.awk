@@ -9,6 +9,7 @@ BEGIN {
     }
     if (V) print "program length " counter;
     pc = 0;
+    relbase=0;
     while (1) {
         inst = sprintf("%05d", mem[pc]);
         opcode = substr(inst, 4)+0;
@@ -18,16 +19,20 @@ BEGIN {
 
         if (opcode == 99) break;
 
-        arg1 = arg1mode ? mem[pc+1] : mem[mem[pc+1]];
-        arg2 = arg2mode ? mem[pc+2] : mem[mem[pc+2]];
+        arg1addr = (arg1mode == 2 ? relbase : 0) + mem[pc+1];
+        arg2addr = (arg2mode == 2 ? relbase : 0) + mem[pc+2];
+        arg3addr = (arg3mode == 2 ? relbase : 0) + mem[pc+3];
+        arg1 = arg1mode == 1 ? mem[pc+1] : mem[arg1addr];
+        arg2 = arg2mode == 1 ? mem[pc+2] : mem[arg2addr];
+
         if (opcode == 1) {
             if (V) print pc " ADD " (arg1mode ? arg1 : "[" mem[pc+1] "]") " " (arg2mode ? arg2 : "[" mem[pc+2] "]") " -> [" mem[pc+3] "] :: " arg1 " + " arg2;
-            mem[mem[pc+3]] = arg1 + arg2;
+            mem[arg3addr] = arg1 + arg2;
             pc += 4;
         }
         else if (opcode == 2) {
             if (V) print pc " MUL " (arg1mode ? arg1 : "[" mem[pc+1] "]") " " (arg2mode ? arg2 : "[" mem[pc+2] "]") " -> [" mem[pc+3] "] :: " arg1 " * " arg2;
-            mem[mem[pc+3]] = arg1 * arg2;
+            mem[arg3addr] = arg1 * arg2;
             pc += 4;
         }
         else if (opcode == 3) {
@@ -38,7 +43,7 @@ BEGIN {
             } else {
                 getline val;
             }
-            mem[mem[pc+1]] = val + 0;
+            mem[arg1addr] = val + 0;
             pc += 2;
         }
         else if (opcode == 4) {
@@ -57,13 +62,17 @@ BEGIN {
         }
         else if (opcode == 7) {
             if (V) print pc " LT " (arg1mode ? arg1 : "[" mem[pc+1] "]") " " (arg2mode ? arg2 : "[" mem[pc+2] "]") " [" mem[pc+3] "] :: " arg1 " " arg2;
-            mem[mem[pc+3]] = (arg1 < arg2 ? 1 : 0);
+            mem[arg3addr] = (arg1 < arg2 ? 1 : 0);
             pc += 4;
         }
         else if (opcode == 8) {
             if (V) print pc " EQ " (arg1mode ? arg1 : "[" mem[pc+1] "]") " " (arg2mode ? arg2 : "[" mem[pc+2] "]") " [" mem[pc+3] "] :: " arg1 " " arg2;
-            mem[mem[pc+3]] = (arg1 == arg2 ? 1 : 0);
+            mem[arg3addr] = (arg1 == arg2 ? 1 : 0);
             pc += 4;
+        }
+        else if (opcode == 9) {
+            relbase += arg1;
+            pc += 2;
         }
         else {
             print "Illegal instruction " inst;
