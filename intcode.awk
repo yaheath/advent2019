@@ -7,6 +7,13 @@ BEGIN {
             counter++;
         }
     }
+    if (POKE != "") {
+        n = split(POKE, pokes, ",");
+        for (i = 1; i <= n; i++) {
+            split(pokes[i], poke, ":");
+            mem[poke[1] + 0] = poke[2] + 0;
+        }
+    }
     if (V) print "program length " counter;
     pc = 0;
     relbase=0;
