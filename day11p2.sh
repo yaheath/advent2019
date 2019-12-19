@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Same as part 1, except the first squre is white and
+# we'll print out the grid to see what the robot made.
+
 PROG=day11.input
 
 robotprog='

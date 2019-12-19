@@ -1,3 +1,35 @@
+# All of the code from part 1 is here, plus more to implement
+# the "laser" part of the puzzle. We repeat what part 1 does
+# to find the location where the laser will be deployed.
+#
+# To accomplish the laser's function of sweeping in a clockwise
+# direction, I need the program to figure out the order that the
+# cells will be intersected by the laser. atan2() to the rescue!
+# We can iterate over each cell in a grid around the center, and
+# use atan2() to get the angle to that cell. Then we just need to
+# sort the cells by increasing angle and that's the order the
+# laser will intersect.
+#
+# Hold on a sec, though... standard awk doesn't have a sort
+# function (gawk does, but I'm gonna be stubborn and stick to
+# basic awk). So I can either implement my own sort function
+# within awk (ugh) or just use the unix sort tool. Guess which
+# I opted for?
+#
+# So this first awk program reads the problem input just to get
+# its size; and spits out a list of lines that contain space-
+# separated angle, x, and y. That list gets piped into `sort -n`
+# which sorts it into numeric order.
+#
+# The main awk program reads in that list, reduces the x/y slope
+# for each cell and de-duplicates the data until we get a nice
+# list of offsets from the center in increasing rotational order.
+#
+# Then, once we find the location to deploy the laser (ala part 1),
+# we implement the laser "sweep" by iterating over the angles list
+# and calling shootat() which will return 1 if it finds an asteroid
+# along the given slope.
+
 awk '
 BEGIN {
     FS = "";

@@ -1,3 +1,7 @@
+# Not much new here, other than the fancy regex in
+# the split() which basically strips out everything
+# but the numbers themselves.
+
 NSTEPS=1000
 awk -v NSTEPS=$NSTEPS '
 BEGIN { nmoons = 0; }

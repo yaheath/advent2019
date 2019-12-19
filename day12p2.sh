@@ -1,3 +1,12 @@
+# Solution spoiler: the key here is that the three axes
+# are independent of one another; and while the entire
+# state will take a gazillion iterations to repeat,
+# each of the three axes' states will individually repeat
+# after a reasonable number of iterations. So we find
+# the number of iterations that each axis repeats at, then
+# calculate the Least Common Multiple of the three values
+# which will be the number of iterations for the whole
+# system to repeat.
 awk '
 BEGIN { nmoons = 0; }
 {

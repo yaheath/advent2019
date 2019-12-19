@@ -1,3 +1,42 @@
+# Now we're getting into more difficult tasks that will start to
+# illustrate why you probably won't be using awk to write your next
+# Big App.
+#
+# Even though awk has functions (made use of here) and other big-boy
+# language features like the usual if/else and looping constructs
+# and a nice* associative array type, there are some things that
+# make awk ...unpleasant.
+#    *if you use them right
+#
+# For example, you have to be careful about naming your variables,
+# especially when using functions, because all variables (other than
+# function arguments) are global!
+#
+# For the solution, we utilize awk's line-by-line invocation of
+# the "main" block to read in the asteroid grid, tracking its height
+# and width as we go so that when we start processing we know how
+# big the grid is (and the program will work with any size grid).
+#
+# All of the business happens in the END block, where we test each
+# asteroid to see which can see the most other asteroids.
+#
+# The way getvisible works is: first duplicate the grid into a
+# temporary grid, so that we can mutate the temporary grid all we
+# like but still have the original there to test the next location.
+#
+# Then it sort of spirals out from the center asteroid (where the
+# center is the coordinates passed in to the function), testing
+# the square of 8 cells immediately surrounding the center asteroid,
+# then the square of cells around that, etc. until we cover the whole
+# map. If we find an astroid in one of the tested cells, we find the
+# slope of the line connecting the found asteroid with the center
+# asteroid, and then search along that slope outward, deleting
+# any asteroid we might find from tgrid. For example, if we find
+# an asteroid 2 units south and 6 units west of the center asteroid,
+# the slope would be -3/1, so we'd repeatedly jump 3 units west and 1
+# unit south (until we leave the bounds of the grid) deleting any
+# asteroids that might happen to be at those locations.
+
 awk '
 BEGIN {
     FS = "";
