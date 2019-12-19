@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# We have to try every combination of phase settings, which
+# is to say every ordering of the digits 0 1 2 3 4.
+#
+# The permute() function recursivly produces all of the possible
+# orderings. The run() function invokes the "amplifier" for each
+# digit, grabbing the output and feeding it to the next "amplifier".
+
 PROG=day07.input
 
 amp() {
@@ -8,6 +15,7 @@ amp() {
 
 run() {
     acc=0
+    # "grep -o ." splits its input into individual characters
     for p in $(echo $1 | grep -o .); do
         acc=$(amp $p $acc)
     done

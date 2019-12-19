@@ -1,6 +1,8 @@
 #!/bin/sh
 
-NOUN=0
+# Whoo, a solution using sh script this time; but still also
+# using awk via the part 1 solution. The unix 'seq' command
+# comes in handy here to iterate through values.
 
 for VERB in $(seq 0 99); do
     for NOUN in $(seq 0 99); do

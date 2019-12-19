@@ -9,7 +9,7 @@ BEGIN { FS="-"; }
 END {
     count=0;
     for (v = FROM+0; v <= TO+0; v++) {
-        split(v+"", digits, "");
+        split(v "", digits, "");
         last=-1;
         gotdup=0;
         runl=0;

@@ -1,3 +1,23 @@
+# One new thing here is the use of the dict-like behavior
+# of arrays to simulate a 2D array. The key is a string
+# consisting of the x and y coordinates separated by a comma.
+# This uses a syntax that might be a bit unfamiliar: variables
+# or string constants separated by spaces get concatenated.
+# Other languages let you concatenate string constants that way,
+# but awk includes variables and and number constants.
+#
+# There's also some places where I explicitly convert a string
+# to a number by adding 0 to it. This isn't always necessary as
+# awk will do that automatically when used in a mathematical
+# expression. However, when the variable is going to be used
+# in a comparison (e.g.  a < b ), if either side of the comparison
+# is a string (even a string representation of a number) then
+# both values are compared as strings.
+#
+#    if ("2" > 10) print "gotcha";   <-- will print "gotcha"
+#
+# Also, we have to deal with a lack of a builtin absolute value
+# function.
 awk '
     BEGIN {
         FS=","

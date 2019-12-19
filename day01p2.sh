@@ -1,3 +1,5 @@
+# The calculation here is a bit more involved, but the problem
+# is still within awk's wheelhouse.
 awk '
    BEGIN { s = 0 }
    {

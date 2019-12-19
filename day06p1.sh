@@ -1,3 +1,8 @@
+# Here we're using the awk array's dict/hash properties
+# directly, which makes this implementation really simple
+# and elegant. Note the "for..in" syntax, which iterates
+# over the *keys* in the `map` array (kinda like
+# Javascript when you do "for..in" on an object).
 awk '
 BEGIN { FS=")" }
 {

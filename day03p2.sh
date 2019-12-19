@@ -31,10 +31,11 @@ awk '
     END {
         closest = 0
         for (i = 0; i < ncrossings; i++) {
-            split(cross[i], coord);
-            x = coord[1] + 0; y = coord[2] + 0;
-            if (closest == 0 || x + y < closest) {
-                closest = x + y;
+            split(cross[i], lengths);
+            w1 = lengths[1] + 0;
+            w2 = lengths[2] + 0;
+            if (closest == 0 || w1 + w2 < closest) {
+                closest = w1 + w2;
             }
         }
         print closest;

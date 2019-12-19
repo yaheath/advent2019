@@ -3,7 +3,12 @@
 let width=25
 let height=6
 let "lyrsize = width * height"
-awk "{ gsub(/.{$lyrsize}/, \"&\\n\"); print;}" <day08.input | awk -v height=$height -v width=$width '
+
+# Why not just use `-v lyrsize=$lyrsize` for the first awk instead of mucking
+# about with all that ugly shell escaping, you might ask?
+# It's because you can't compose a regex within awk using a variable; a regex
+# has to be a literal. So we compose it outside of awk via the shell.
+awk "{ gsub(/.{$lyrsize}/, \"&\\n\"); printf \"%s\", \$0;}" <day08.input | awk -v height=$height -v width=$width '
 BEGIN {
     FS = "";
 }
