@@ -1,4 +1,5 @@
 BEGIN {
+    _ord_init();
     counter=0;
     while ((getline line <PROG) > 0) {
         n = split(line, items, ",");
@@ -48,14 +49,21 @@ BEGIN {
                 val = FIRSTINPUT;
                 FIRSTINPUT = "";
             } else {
-                getline val;
+                if (ASCII_IN)
+                    val = asciiin();
+                else
+                    getline val;
             }
             mem[arg1addr] = val + 0;
             pc += 2;
         }
         else if (opcode == 4) {
             if (V) print pc " OUT " (arg1mode ? arg1 : "[" mem[pc+1] "]");
-            print arg1;
+            if (ASCII_OUT && arg1 >= 0 && arg1 < 128) {
+                printf("%c", arg1);
+            } else {
+                print arg1;
+            }
             pc += 2;
         }
         else if (opcode == 5 || opcode == 6) {
@@ -86,4 +94,20 @@ BEGIN {
             exit 1;
         }
     }
+}
+function asciiin() {
+    if (inputbuf == "") {
+        getline inputbuf;
+        inputbuf = inputbuf "\n";
+    }
+    c = substr(inputbuf, 1, 1);
+    inputbuf = substr(inputbuf, 2);
+    return ord(c);
+}
+function _ord_init() {
+    for (i = 0; i < 128; i++)
+        _ord_[sprintf("%c", i)] = i;
+}
+function ord(c) {
+    return _ord_[c];
 }
