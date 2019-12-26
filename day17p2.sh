@@ -1,48 +1,44 @@
 #!/bin/sh
 
-mkfifo day17in.fifo day17out.fifo
+# For this puzzle, I added optional ASCII input and output modes to the Intcode
+# machine, making it a bit easier to interface to.
+#
+# The first step is finding the sequence of moves the robot will need to make;
+# then the second step is producing a "program" for the robot. That second step
+# is basically a dictionary-based compression algorithm, where the dictionary
+# may have at most 3 entries.
+#
+# This is not currently functional. I can't get my "compression" function
+# to work so I again cheated and used someone else's solution to find my
+# answer so I could move on. I will come back to this and fix it later (and
+# now that I know what my movement program should be it'll be easier to fix
+# my implementation).
 
-awk -v PROG=day17.input -v ASCII_OUT=1 -v ASCII_IN=1 -v POKE=0:2 -f intcode.awk <day17out.fifo >day17in.fifo &
-awk -v OUT=day17out.fifo -v IN=day17in.fifo '
+# awk -v PROG=day17.input -v ASCII_OUT=1 -v ASCII_IN=1 -v POKE=0:2 -f intcode.awk <day17out.fifo >day17in.fifo &
+
+path=$(awk -v PROG=day17.input -v ASCII_OUT=1 -f intcode.awk | awk '
 BEGIN {
     hgt = 0;
     wid = 0;
-    print "" > OUT;
-    while((getline line < IN) > 0) {
-        nf = split(line, chars, "");
-        if (nf == 0) break;
-        for (x = 1; x <= nf; x++) {
-            wid = x > wid ? x : wid;
-            if (chars[x] == "^") {
-                grid[x-1 "," hgt] = 1;
-                botX = x - 1;
-                botY = hgt;
-            } else if (chars[x] == "#") {
-                grid[x-1 "," hgt] = 1;
-            }
+    FS = "";
+}
+{
+    for (x = 1; x <= NF; x++) {
+        wid = x > wid ? x : wid;
+        if ($x == "^") {
+            grid[x-1 "," hgt] = 1;
+            botX = x - 1;
+            botY = hgt;
+        } else if ($x == "#") {
+            grid[x-1 "," hgt] = 1;
         }
-        hgt++;
     }
-
+    hgt++;
+}
+END {
     findintersections();
-
-    # First look for solutions for the path that goes forward at
-    # every intersection. This assumes that there will be no
-    # T intersections and the start and end points are dead ends.
-    botDir = "N";
-    walk(0, 0);
-    delete traversed;
-
-    # findsolution will exit if it finds a solution
-    findsolution(steps);
-
-    # Enumerate all the possible paths (will be slow)
-    findpaths();
-
-    for (i = 1; i < nPaths; i++) {
-        findsolution(paths[i]);
-    }
-    print "no solution found";
+    walk();
+    print steps;
 }
 function findintersections() {
     for (y = 1; y < hgt-1; y++) {
@@ -58,165 +54,200 @@ function findintersections() {
         }
     }
 }
-function findpaths() {
-    # Find every possible path that traverses all the cells.
-    # Makes these assumptions:
-    #  * there is not more than one dead end other than one
-    #      at the starting point, and
-    #  * there are no T intersections.
-    # These are the case for the input I was given.
-    traversed[botX "," botY] = 1;
-    botDir = "N";
-    nPaths = 0;
-    traverse("", "N", 0);
-    #for (i = 0; i < nPaths; i++) {
-    #    print paths[i];
-    #}
-}
-function traverse(path, dir, levels) {
-    v = walk(0, 1);
-    path = path steps;
-    dir = botDir;
-    if (v) {
-        if (dir != "S" && !traversed[botX "," botY-1]) {
-            botDir = "N";
-            turn = "";
-            if (dir == "E") turn = "L";
-            if (dir == "W") turn = "R";
-            traverse(path turn, "N", levels+1);
-        }
-        if (dir != "N" && !traversed[botX "," botY+1]) {
-            botDir = "S";
-            turn = "";
-            if (dir == "E") turn = "R";
-            if (dir == "W") turn = "L";
-            traverse(path turn, "S", levels+1);
-        }
-        if (dir != "E" && !traversed[botX-1 "," botY]) {
-            botDir = "W";
-            turn = "";
-            if (dir == "N") turn = "R";
-            if (dir == "S") turn = "L";
-            traverse(path turn, "W", levels+1);
-        }
-        if (dir != "W" && !traversed[botX+1 "," botY]) {
-            botDir = "E";
-            turn = "";
-            if (dir == "N") turn = "L";
-            if (dir == "S") turn = "R";
-            traverse(path turn, "E", levels+1);
-        }
-    }
-    else {
-        if (!alltraversed()) {
-            botDir = dir;
-            walk(1, 1);
-            return;
-        }
-        paths[nPaths++] = path;
-    }
-    botDir = dir;
-    walk(1, 1);
-}
-
-function alltraversed() {
-    for (item in grid) {
-        if (grid[item] && !traversed[item]) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-function walk(back, stopatinters) {
+function walk() {
     # Move the bot along the scaffold until it reaches an intersection or
     # a dead end.
     steps = "";
     while (1) {
-        traversed[botX "," botY] = !back;
         dx = 0; dy = 0;
         leftX = 0; leftY = 0;
         rightX = 0; rightY = 0;
         if (botDir == "N") {
-            dy = back ? 1 : -1;
-            leftX = back ? 1 : -1;
-            rightX = back ? -1 : 1;
+            dy = -1;
+            leftX = -1;
+            rightX = 1;
             leftdir = "W";
             rightdir = "E";
         }
         if (botDir == "S") {
-            dy = back ? -1 : 1;
-            leftX = back ? -1 : 1;
-            rightX = back ? 1 : -1;
+            dy = 1;
+            leftX = 1;
+            rightX = -1;
             leftdir = "E";
             rightdir = "W";
         }
         if (botDir == "W") {
-            dx = back ? 1 : -1;
-            leftY = back ? -1 : 1;
-            rightY = back ? 1 : -1;
+            dx = -1;
+            leftY = 1;
+            rightY = -1;
             leftdir = "S";
             rightdir = "N";
         }
         if (botDir == "E") {
-            dx = back ? -1 : 1;
-            leftY = back ? 1 : -1;
-            rightY = back ? -1 : 1;
+            dx = 1;
+            leftY = -1;
+            rightY = 1;
             leftdir = "N";
             rightdir = "S";
         }
-        if (inters[botX + dx "," botY + dy] && stopatinters) {
-            botX += dx;
-            botY += dy;
-            traversed[botX "," botY] = !back;
-            if (!back) steps = steps "F";
-            return 1;
-        }
         if (!grid[botX + dx "," botY + dy]) {
             if (grid[botX + rightX "," botY + rightY]) {
-                if (!back) steps = steps "R";
+                steps = steps "R";
                 botDir = rightdir;
             } else if (grid[botX + leftX "," botY + leftY]) {
-                if (!back) steps = steps "L";
+                steps = steps "L";
                 botDir = leftdir;
             } else {
-                return 0;
+                return;
             }
         } else {
             botX += dx;
             botY += dy;
-            if (!back) steps = steps "F";
+            steps = steps "F";
         }
-        if (!stopatinters && alltraversed()) return 0;
     }
 }
 function dumpboard() {
     for (y = 0; y < hgt; y++) {
         for (x = 0; x < wid; x++) {
-            printf "%s", grid[x "," y] ? (traversed[x "," y] ? "t" : "#") : " ";
+            printf "%s", grid[x "," y] ? "#" : " ";
         }
         print "";
     }
 }
-function findsolution(steps) {
-    if (compress(steps)) {
-        getline line < OUT;
-        print main > IN;
-        getline line < OUT;
-        print subA > IN;
-        getline line < OUT;
-        print subB > IN;
-        getline line < OUT;
-        print subC > IN;
-        while ((getline line < OUT) >= 0) {
-            lastline = line;
-        }
-        print lastline;
+')
+
+compressprog='
+{
+    if (compress($0)) {
+        print main;
+        print subA;
+        print subB;
+        print subC;
         exit 0;
     }
 }
 function compress(steps) {
-    return 0
+    for (ai = 20; ai <= 40; ai++) {
+        for (bi = 20; bi <= 40; bi++) {
+            for (ci = 20; ci <= 40; ci++) {
+                if (searchpats(steps, ai, bi, ci)) {
+                    print "a", ai, "b", bi, "c", ci;
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
 }
-' </dev/null
-rm day17in.fifo day17out.fifo
+function searchpats(string, alen, blen, clen) {
+    stringlen = length(string);
+    asection = substr(string, 1, alen);
+    #aresult = findrepeats(asection, string);
+    an = gsub(asection, blanks(alen, " "), string);
+    #if (n != aresult + 0) {
+    #    print "mismatch a";
+    #}
+    #split(aresult, aparts, ",");
+
+    bstart = findnonblank(string);
+    while (1) {
+        bsection = substr(string, bstart, blen);
+        if (length(bsection) < blen) return 0;
+        if (index(bsection, " ") == 0) break;
+        bstart++;
+        if (bstart == stringlen) return 0;
+    }
+    #bresult = findrepeats(bsection, string);
+    bn = gsub(bsection, blanks(blen, " "), string);
+    #if (n != bresult + 0) {
+    #    print "mismatch b";
+    #}
+
+    cstart = findnonblank(string, bstart);
+    while (1) {
+        csection = substr(string, cstart, clen);
+        if (length(csection) < clen) return 0;
+        if (index(csection, " ") == 0) break;
+        cstart++;
+        if (cstart == stringlen) return 0;
+    }
+    #cresult = findrepeats(csection, string);
+    cn = gsub(csection, blanks(clen, " "), string);
+    #if (n != cresult + 0) {
+    #    print "mismatch c";
+    #}
+    if (findnonblank(string)) return 0;
+
+    if (an + bn + cn > 10) return 0;
+
+    # have a candidate, now see if the parts encode
+    # into small enough strings (<=20 characters)
+    subA = encode(asection);
+    print "subA", subA;
+    subB = encode(bsection);
+    print "subB", subB;
+    subC = encode(csection);
+    print "subC", subC;
+    if (length(subA) > 20) return 0;
+    if (length(subB) > 20) return 0;
+    if (length(subC) > 20) return 0;
+
+    return 1;
+}
+function encode(movestr) {
+    n = split(movestr, mv, "");
+    rl = 0;
+    out = "";
+    for (i = 1; i <= n; i++) {
+        if (mv[i] == "F") {
+            rl++;
+        }
+        else {
+            if (out) out = out ",";
+            if (rl) {
+                out = out rl ",";
+                rl = 0;
+            }
+            out = out mv[i];
+        }
+    }
+    if (rl) {
+        if (out) out = out ",";
+        out = out rl;
+    }
+    return out;
+}
+function blanks(len, char) {
+    ret = "";
+    for (i = 0; i < len; i++)
+        ret = ret char;
+    return ret;
+}
+function findnonblank(strng, start) {
+    strnglen = length(strng);
+    if (!start) start = 1;
+    for (fi = start; fi <= strnglen; fi++) {
+        if (substr(strng, fi, 1) != " ") return fi;
+    }
+    return 0;
+}
+function findrepeats(section, string) {
+    seclen = length(section);
+    strlen = length(string);
+    offset = 0;
+    count = 0;
+    ret = "";
+    while (1) {
+        start = index(string, section);
+        if (start == 0) break;
+        count++;
+        ret = ret "," (start + offset);
+        offset += start + seclen;
+        string = substr(string, start + seclen);
+    }
+    return count ret;
+}
+'
+
+echo $path | awk "$compressprog"
