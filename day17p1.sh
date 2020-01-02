@@ -1,6 +1,6 @@
 #!/bin/sh
 
-awk -v PROG=day17.input -f intcode.awk | awk '
+awk -v PROG=day17.input -f lib/intcode.awk | awk '
 BEGIN {
     hgt = 0;
     wid = 0;

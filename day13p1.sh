@@ -5,7 +5,7 @@
 # use the NR special variable which counts up for each input line
 # (starting at 1, of course), so (NR % 3) goes 1, 2, 0, 1, 2, 0 ...
 
-awk -v PROG=day13.input -f intcode.awk | awk '
+awk -v PROG=day13.input -f lib/intcode.awk | awk '
 {
     if (!(NR % 3) && $0 == "2") count++;
 }

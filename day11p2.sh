@@ -44,7 +44,7 @@ BEGIN {
 }
 '
 mkfifo day11.brainin day11.brainout
-cat <day11.brainin | awk -v PROG=$PROG -f intcode.awk >day11.brainout &
+cat <day11.brainin | awk -v PROG=$PROG -f lib/intcode.awk >day11.brainout &
 awk -v BRAININ="day11.brainin" -v BRAINOUT="day11.brainout" "${robotprog}" </dev/null
 wait
 rm day11.brainin day11.brainout

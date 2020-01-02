@@ -28,7 +28,7 @@
 clear
 mkfifo day13.fifo
 
-cat day13.fifo | awk -v PROG=day13.input -v POKE=0:2 -f intcode.awk |
+cat day13.fifo | awk -v PROG=day13.input -v POKE=0:2 -f lib/intcode.awk |
     awk -v FIFO=day13.fifo '
 BEGIN {
     print "";

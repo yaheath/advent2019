@@ -11,4 +11,4 @@
 # when I fixed the scripts so they can be invoked in a
 # consistent way.
 #
-echo 1 | awk -v PROG=day05.input -f intcode.awk
+echo 1 | awk -v PROG=day05.input -f lib/intcode.awk

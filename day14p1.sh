@@ -18,11 +18,9 @@
 # unless the prerequisite is "ORE" which doesn't need to
 # be made. Repeat until the queue is empty.
 
-awk '
-BEGIN {
-    queueHead = 0;
-    queueTail = 0;
-}
+queue_lib=$(cat lib/queue.awk)
+
+main='
 {
     # The last field (using the default whitespace-based
     # field splitting) will be the target chemical and is
@@ -30,6 +28,7 @@ BEGIN {
     table[$NF] = $0;
 }
 END {
+    resetqueue();
     enqueue("1 FUEL");
     while(queuesize() > 0) {
         targetstr = dequeue();
@@ -80,18 +79,6 @@ END {
     }
     print oreConsumed;
 }
-function enqueue(item) {
-    fifo[queueHead] = item;
-    queueHead++;
-}
-function dequeue() {
-    if (queueHead == queueTail) return "";
-    queueitem = fifo[queueTail];
-    delete fifo[queueTail];
-    queueTail++;
-    return queueitem;
-}
-function queuesize() {
-    return queueHead - queueTail;
-}
-' < day14.input
+'
+
+awk "${main}${queue_lib}" < day14.input

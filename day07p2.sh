@@ -21,11 +21,11 @@ amp() {
     # split the input string into an array of characters
     phases=($(echo $1 | grep -o .))
     # PIPES!!
-    awk -v PROG=$PROG -v FIRSTINPUT=${phases[0]} -f intcode.awk |
-        awk -v PROG=$PROG -v FIRSTINPUT=${phases[1]} -f intcode.awk |
-        awk -v PROG=$PROG -v FIRSTINPUT=${phases[2]} -f intcode.awk |
-        awk -v PROG=$PROG -v FIRSTINPUT=${phases[3]} -f intcode.awk |
-        awk -v PROG=$PROG -v FIRSTINPUT=${phases[4]} -f intcode.awk
+    awk -v PROG=$PROG -v FIRSTINPUT=${phases[0]} -f lib/intcode.awk |
+        awk -v PROG=$PROG -v FIRSTINPUT=${phases[1]} -f lib/intcode.awk |
+        awk -v PROG=$PROG -v FIRSTINPUT=${phases[2]} -f lib/intcode.awk |
+        awk -v PROG=$PROG -v FIRSTINPUT=${phases[3]} -f lib/intcode.awk |
+        awk -v PROG=$PROG -v FIRSTINPUT=${phases[4]} -f lib/intcode.awk
 }
 
 run() {

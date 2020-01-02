@@ -19,15 +19,15 @@
 # quantity, and get an estimate of how many FUEL to make.
 # Run that estimate, and adjust it up or down and repeat
 # until we converge on the target.
-awk '
-BEGIN {
-    queueHead = 0;
-    queueTail = 0;
-}
+
+queue_lib=$(cat lib/queue.awk)
+
+main='
 {
     table[$NF] = $0;
 }
 END {
+    resetqueue();
     trillion=1000000000000;
     x = 10000;
     run(x);
@@ -124,18 +124,6 @@ function run(numFuels) {
         }
     }
 }
-function enqueue(item) {
-    fifo[queueHead] = item;
-    queueHead++;
-}
-function dequeue() {
-    if (queueHead == queueTail) return "";
-    queueitem = fifo[queueTail];
-    delete fifo[queueTail];
-    queueTail++;
-    return queueitem;
-}
-function queuesize() {
-    return queueHead - queueTail;
-}
-' < day14.input
+'
+
+awk "${main}${queue_lib}" < day14.input

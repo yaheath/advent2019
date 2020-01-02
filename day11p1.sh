@@ -48,7 +48,7 @@ mkfifo day11.brainin day11.brainout
 # The `cat` here seems unnecessary: why not just put <day11.brainin
 # directly on the awk? See the comment below. TLDR: it protects the
 # "robotprog" awk from getting a SIGPIPE.
-cat <day11.brainin | awk -v PROG=$PROG -f intcode.awk >day11.brainout &
+cat <day11.brainin | awk -v PROG=$PROG -f lib/intcode.awk >day11.brainout &
 
 # here's where the magic happens...
 awk -v BRAININ="day11.brainin" -v BRAINOUT="day11.brainout" "${robotprog}" </dev/null

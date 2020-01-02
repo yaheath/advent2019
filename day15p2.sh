@@ -8,12 +8,11 @@
 
 PROG=day15.input
 mkfifo day15.droid.in day15.droid.out
-awk -v PROG=$PROG -f intcode.awk <day15.droid.in >day15.droid.out &
-awk -v IN=day15.droid.in -v OUT=day15.droid.out '
-END {
-    queueHead = 0;
-    queueTail = 0;
+awk -v PROG=$PROG -f lib/intcode.awk <day15.droid.in >day15.droid.out &
 
+main='
+END {
+    resetqueue()
     explore(0, 0);
     # printmap();
     floodfill();
@@ -107,21 +106,10 @@ function floodfill() {
         }
     }
 }
+'
 
-function enqueue(item) {
-    fifo[queueHead] = item;
-    queueHead++;
-}
-function dequeue() {
-    if (queueHead == queueTail) return "";
-    queueitem = fifo[queueTail];
-    delete fifo[queueTail];
-    queueTail++;
-    return queueitem;
-}
-function queuesize() {
-    return queueHead - queueTail;
-}
-' </dev/null
+queue_lib=$(cat lib/queue.awk)
+
+awk -v IN=day15.droid.in -v OUT=day15.droid.out "${main}${queue_lib}" </dev/null
 
 rm day15.droid.in day15.droid.out

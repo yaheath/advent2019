@@ -14,9 +14,9 @@
 # now that I know what my movement program should be it'll be easier to fix
 # my implementation).
 
-# awk -v PROG=day17.input -v ASCII_OUT=1 -v ASCII_IN=1 -v POKE=0:2 -f intcode.awk <day17out.fifo >day17in.fifo &
+# awk -v PROG=day17.input -v ASCII_OUT=1 -v ASCII_IN=1 -v POKE=0:2 -f lib/intcode.awk <day17out.fifo >day17in.fifo &
 
-path=$(awk -v PROG=day17.input -v ASCII_OUT=1 -f intcode.awk | awk '
+path=$(awk -v PROG=day17.input -v ASCII_OUT=1 -f lib/intcode.awk | awk '
 BEGIN {
     hgt = 0;
     wid = 0;

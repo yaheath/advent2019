@@ -10,7 +10,7 @@
 PROG=day07.input
 
 amp() {
-    echo "$1\n$2" | awk -v PROG=$PROG -f intcode.awk
+    echo "$1\n$2" | awk -v PROG=$PROG -f lib/intcode.awk
 }
 
 run() {
