@@ -8,7 +8,7 @@ function intcode_load(program) {
             intc_mem[intc_pc++] = intc_items[intc_i] + 0;
         }
     }
-    close program;
+    close(program);
     intc_pc = 0;
     intc_relbase=0;
     intc_opcode=0;

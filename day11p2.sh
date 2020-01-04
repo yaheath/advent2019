@@ -17,6 +17,7 @@ BEGIN {
     grid["0,0"] = 1;
 
     print "1" > BRAININ;
+    fflush(BRAININ);
     while (1) {
         if ((getline paint < BRAINOUT) <= 0) break;
         if ((getline turn < BRAINOUT) <= 0) break;
@@ -35,6 +36,7 @@ BEGIN {
         else if (dir == 180) posy++;
         else posx--;
         print !!grid[posx "," posy] > BRAININ;
+        fflush(BRAININ);
     }
     for (y = miny; y <= maxy; y++) {
         for (x = minx; x <= maxx; x++)

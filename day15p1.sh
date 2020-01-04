@@ -75,7 +75,7 @@ function explore(x, y, steps) {
 
 function droid(move) {
     print move > IN;
-    fflush IN;
+    fflush(IN);
     getline response < OUT;
     return response + 0;
 }

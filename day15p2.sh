@@ -68,7 +68,7 @@ function explore(x, y) {
 
 function droid(move) {
     print move > IN;
-    fflush IN;
+    fflush(IN);
     getline response < OUT;
     return response + 0;
 }

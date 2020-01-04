@@ -49,6 +49,10 @@ BEGIN {
                 val = FIRSTINPUT;
                 FIRSTINPUT = "";
             } else {
+                if (PROMPT) {
+                    print PROMPT;
+                    fflush();
+                }
                 if (ASCII_IN)
                     val = asciiin();
                 else
@@ -61,8 +65,10 @@ BEGIN {
             if (V) print pc " OUT " (arg1mode ? arg1 : "[" mem[pc+1] "]");
             if (ASCII_OUT && arg1 >= 0 && arg1 < 128) {
                 printf("%c", arg1);
+                if (arg1 == 10) fflush();
             } else {
                 print arg1;
+                fflush();
             }
             pc += 2;
         }

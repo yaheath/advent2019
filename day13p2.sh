@@ -32,6 +32,7 @@ cat day13.fifo | awk -v PROG=day13.input -v POKE=0:2 -f lib/intcode.awk |
     awk -v FIFO=day13.fifo '
 BEGIN {
     print "";
+    fflush();
 }
 {
     if ((NR % 3) == 1) {
@@ -66,7 +67,7 @@ BEGIN {
             else if (ballx < paddlex) print -1 > FIFO;
             else print 0 > FIFO;
         }
-        fflush "";
+        fflush();
     }
 }
 END { print score }
