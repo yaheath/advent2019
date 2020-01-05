@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Neat twist on a game of life!
+# Figuring out the neighbor count is a bit tedious, but otherwise
+# it's mostly just adding another dimension.
+
 INPUT=${INPUT:-day24.input}
 
 awk '

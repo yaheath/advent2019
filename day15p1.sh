@@ -24,13 +24,13 @@ END {
     # cell. Since the puzzle calls for the number of movement
     # commands needed to reach the target, that should not
     # include the center, hence the minus one here.
-    print map[oxyX "," oxyY] - 1;
+    print map[oxyX, oxyY] - 1;
 }
 
 function printmap() {
     for (y = minY; y <= maxY; y++) {
         for (x = minX; x <= maxX; x++) {
-            cell = map[x "," y];
+            cell = map[x, y];
             if (x == 0 && y == 0) printf "S";
             else if (x == oxyX && y == oxyY) printf "O";
             else printf "%s", (!cell ? "#" : " ");
@@ -40,10 +40,10 @@ function printmap() {
 }
 
 function go(x, y, steps, move, back) {
-    if (map[x "," y] == "" || map[x "," y] > steps) {
+    if (map[x, y] == "" || map[x, y] > steps) {
         i = droid(move);
         if (i == 0) {
-            map[x "," y] = 0;
+            map[x, y] = 0;
             updateminmax(x, y);
         } else {
             if (i == 2) {
@@ -57,7 +57,7 @@ function go(x, y, steps, move, back) {
 }
 
 function explore(x, y, steps) {
-    map[x "," y] = steps++;
+    map[x, y] = steps++;
     updateminmax(x, y);
 
     # north

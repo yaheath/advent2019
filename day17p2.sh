@@ -16,6 +16,9 @@
 
 # awk -v PROG=day17.input -v ASCII_OUT=1 -v ASCII_IN=1 -v POKE=0:2 -f lib/intcode.awk <day17out.fifo >day17in.fifo &
 
+echo "not currently functional"
+exit 1
+
 path=$(awk -v PROG=day17.input -v ASCII_OUT=1 -f lib/intcode.awk | awk '
 BEGIN {
     hgt = 0;

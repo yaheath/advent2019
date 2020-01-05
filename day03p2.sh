@@ -19,11 +19,11 @@ awk '
                 if (dir == "R") x++;
                 if (dir == "L") x--;
                 if (wire == 2) {
-                    if (grid[x "," y] > 0) {
-                        cross[ncrossings++] = grid[x "," y] "," steps
+                    if (grid[x, y] > 0) {
+                        cross[ncrossings++] = grid[x, y] "," steps
                     }
                 } else {
-                    grid[x "," y] = steps;
+                    grid[x, y] = steps;
                 }
             }
         }

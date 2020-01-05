@@ -14,7 +14,7 @@ BEGIN {
     maxy = 0;
     minx = 0;
     miny = 0;
-    grid["0,0"] = 1;
+    grid[0, 0] = 1;
 
     print "1" > BRAININ;
     fflush(BRAININ);
@@ -27,7 +27,7 @@ BEGIN {
         if (posy < miny) miny = posy;
         if (posx > maxx) maxx = posx;
         if (posy > maxy) maxy = posy;
-        grid[posx "," posy] = paint;
+        grid[posx, posy] = paint;
         dir += (turn == 1 ? 90 : -90);
         if (dir < 0) dir += 360;
         else if (dir >= 360) dir -= 360;
@@ -35,12 +35,12 @@ BEGIN {
         else if (dir == 90) posx++;
         else if (dir == 180) posy++;
         else posx--;
-        print !!grid[posx "," posy] > BRAININ;
+        print !!grid[posx, posy] > BRAININ;
         fflush(BRAININ);
     }
     for (y = miny; y <= maxy; y++) {
         for (x = minx; x <= maxx; x++)
-            printf("%s", grid[x "," y] ? "#" : " ");
+            printf("%s", grid[x, y] ? "#" : " ");
         print "";
     }
 }

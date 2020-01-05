@@ -3,8 +3,9 @@
 # Similar to part one, but first I map out the maze then
 # do a flood fill from the oxygen source. The explore recursion
 # now does not repeat already-explored areas making it a bit
-# more efficient. THe flood fill is breadth-first and not
+# more efficient. The flood fill is breadth-first and not
 # recursive, just to be different.
+#
 
 PROG=day15.input
 mkfifo day15.droid.in day15.droid.out
@@ -23,7 +24,7 @@ END {
 function printmap() {
     for (y = minY; y <= maxY; y++) {
         for (x = minX; x <= maxX; x++) {
-            cell = map[x "," y];
+            cell = map[x, y];
             if (x == 0 && y == 0) printf "S";
             else if (x == oxyX && y == oxyY) printf "O";
             else printf "%s", (!cell ? "#" : " ");
@@ -33,10 +34,10 @@ function printmap() {
 }
 
 function go(x, y, move, back) {
-    if (map[x "," y] == "") {
+    if (map[x, y] == "") {
         i = droid(move);
         if (i == 0) {
-            map[x "," y] = 0;
+            map[x, y] = 0;
             updateminmax(x, y);
         } else {
             if (i == 2) {
@@ -50,7 +51,7 @@ function go(x, y, move, back) {
 }
 
 function explore(x, y) {
-    map[x "," y] = " ";
+    map[x, y] = " ";
     updateminmax(x, y);
 
     # north
@@ -81,27 +82,27 @@ function updateminmax(x, y) {
 
 function floodfill() {
     enqueue(oxyX "," oxyY);
-    map[oxyX "," oxyY] = 1;
+    map[oxyX, oxyY] = 1;
     while (queuesize() > 0) {
         coords = dequeue();
         split(coords, c, ",");
         x = c[1]; y = c[2];
-        steps = map[x "," y];
+        steps = map[x, y];
         maxsteps = steps > maxsteps ? steps : maxsteps;
-        if (map[x+1 "," y] == " " || map[x+1 "," y] > steps + 1) {
-            map[x+1 "," y] = steps + 1;
+        if (map[x+1, y] == " " || map[x+1, y] > steps + 1) {
+            map[x+1, y] = steps + 1;
             enqueue(x+1 "," y);
         }
-        if (map[x-1 "," y] == " " || map[x-1 "," y] > steps + 1) {
-            map[x-1 "," y] = steps + 1;
+        if (map[x-1, y] == " " || map[x-1, y] > steps + 1) {
+            map[x-1, y] = steps + 1;
             enqueue(x-1 "," y);
         }
-        if (map[x "," y+1] == " " || map[x "," y+1] > steps + 1) {
-            map[x "," y+1] = steps + 1;
+        if (map[x, y+1] == " " || map[x, y+1] > steps + 1) {
+            map[x, y+1] = steps + 1;
             enqueue(x "," y+1);
         }
-        if (map[x "," y-1] == " " || map[x "," y-1] > steps + 1) {
-            map[x "," y-1] = steps + 1;
+        if (map[x, y-1] == " " || map[x, y-1] > steps + 1) {
+            map[x, y-1] = steps + 1;
             enqueue(x "," y-1);
         }
     }

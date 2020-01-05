@@ -68,7 +68,7 @@ BEGIN {
     x=0;
     for (i = 1; i <= NF; i++) {
         if ($i == "#") {
-            grid[x "," hgt] = 1;
+            grid[x, hgt] = 1;
         }
         x++;
     }
@@ -81,7 +81,7 @@ END {
     maxvis = 0;
     for (gy = 0; gy < hgt; gy++) {
         for (gx = 0; gx < wid; gx++) {
-            if (grid[gx "," gy] == 1) {
+            if (grid[gx, gy] == 1) {
                 cnt = getvisible(gx, gy);
                 if (cnt > maxvis) {
                     maxvis = cnt;
@@ -139,8 +139,8 @@ function shootat(lx, ly, xdiff, ydiff) {
     tx = lx + xdiff;
     ty = ly + ydiff;
     while (tx >= 0 && tx < wid && ty >= 0 && ty < hgt) {
-        if (tgrid[tx "," ty] == 1) {
-            delete tgrid[tx "," ty];
+        if (tgrid[tx, ty] == 1) {
+            delete tgrid[tx, ty];
             return 1;
         }
         tx += xdiff;
@@ -160,24 +160,24 @@ function getvisible(cx, cy) {
     for (level = 1; level <= size; level++) {
         for (x = cx - level; x <= cx + level; x++) {
             y = cy - level;
-            if (tgrid[x "," y] == 1) {
+            if (tgrid[x, y] == 1) {
                 numroids++;
                 removeroids(cx, cy, x, y);
             }
             y = cy + level;
-            if (tgrid[x "," y] == 1) {
+            if (tgrid[x, y] == 1) {
                 numroids++;
                 removeroids(cx, cy, x, y);
             }
         }
         for (y = cy - (level-1); y <= cy + (level-1); y++) {
             x = cx - level;
-            if (tgrid[x "," y] == 1) {
+            if (tgrid[x, y] == 1) {
                 numroids++;
                 removeroids(cx, cy, x, y);
             }
             x = cx + level;
-            if (tgrid[x "," y] == 1) {
+            if (tgrid[x, y] == 1) {
                 numroids++;
                 removeroids(cx, cy, x, y);
             }
@@ -199,7 +199,7 @@ function removeroids(cx, cy, tx, ty) {
     tx += diffx;
     ty += diffy;
     while (tx >= 0 && tx < wid && ty >= 0 && ty < hgt) {
-        delete tgrid[tx "," ty];
+        delete tgrid[tx, ty];
         tx += diffx;
         ty += diffy;
     }

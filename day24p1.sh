@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# a Game of Life, sorta
+
 INPUT=${INPUT:-day24.input}
 
 awk '

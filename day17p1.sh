@@ -13,7 +13,7 @@ BEGIN {
     }
     else {
         char = sprintf("%c", $1+0);
-        grid[x "," hgt] = char;
+        grid[x, hgt] = char;
         x++;
         wid = x > wid ? x : wid;
     }
@@ -22,11 +22,11 @@ END {
     sum = 0;
     for (y = 1; y < hgt-1; y++) {
         for (x = 1; x < wid-1; x++) {
-            if (grid[x "," y] == "#" &&
-                grid[x+1 "," y] == "#" &&
-                grid[x-1 "," y] == "#" &&
-                grid[x "," y+1] == "#" &&
-                grid[x "," y-1] == "#")
+            if (grid[x, y] == "#" &&
+                grid[x+1, y] == "#" &&
+                grid[x-1, y] == "#" &&
+                grid[x, y+1] == "#" &&
+                grid[x, y-1] == "#")
             {
                 sum += (x * y);
             }

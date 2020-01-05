@@ -26,7 +26,7 @@ BEGIN {
         if ((getline turn < BRAINOUT) <= 0) break;
         paint += 0;
         turn += 0;
-        grid[posx "," posy] = paint;
+        grid[posx, posy] = paint;
         dir += (turn == 1 ? 90 : -90);
         if (dir < 0) dir += 360;
         else if (dir >= 360) dir -= 360;
@@ -34,7 +34,7 @@ BEGIN {
         else if (dir == 90) posx++;
         else if (dir == 180) posy++;
         else posx--;
-        print !!grid[posx "," posy] > BRAININ;
+        print !!grid[posx, posy] > BRAININ;
         fflush(BRAININ);
     }
     npainted = 0;
